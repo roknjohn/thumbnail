@@ -1,0 +1,119 @@
+<html><head>
+<style>
+  body {
+    font-size : 20pt;
+  } 
+  button {
+    -webkit-appearance: none;
+	font-size : 16pt;
+	background-color : yellow;
+  }
+  input {
+    -webkit-appearance: none;
+	*font-size : 16pt;
+  }
+</style>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+
+	function debugMsg(msg)
+	{	console.log(msg);		  
+		$.post("http://192.168.0.26:8080", { debug : msg},  function(data) { });
+		//sleep(100);
+	}
+		
+	function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+    }
+
+	function fileSelected(e)
+	{   //User captured or selected file: Event
+		debugMsg("File selected()");
+		var file = e.target.files[0];
+		if (file) 
+		  readFile(file);
+		else 
+			alert('Not a valid image!');	
+	}
+	
+	function readFile(file) 
+	{//set up a FileReader
+	debugMsg("readFile()");
+	var reader = new FileReader();
+	reader.onloadend = function () {
+		var myvid = document.getElementById('myvid');
+		myvid.src = reader.result;
+		myvid.load();
+	}
+	reader.onerror = function () {
+		alert('There was an error reading the file!');
+	}
+	//read in the file data
+	reader.readAsDataURL(file);
+	}
+
+	function fileSelected2(e)
+	{   //User captured or selected file: Event
+		debugMsg("File selected()");
+		var file = e.target.files[0];
+		if (file) 
+		  readFile2(file);
+		else 
+			alert('Not a valid image!');	
+	}
+	
+	function readFile2(file) 
+	{//set up a FileReader
+	debugMsg("readFile()");
+	var reader2 = new FileReader();
+	reader2.onloadend = function () {
+		var myvid2 = document.getElementById('myvid2');
+		myvid2.src = reader2.result;
+		myvid2.load();
+	}
+	reader2.onerror = function () {
+		alert('There was an error reading the file!');
+	}
+	//read in the file data
+	reader2.readAsDataURL(file);
+	}
+
+	function grabframe() {
+		var myvid = document.getElementById('myvid');
+        var mycanvas = document.getElementById('mycanvas');
+		var ctx = mycanvas.getContext('2d'); 
+		ctx.fillStyle = "#6F4FF0";
+		ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
+		ctx.drawImage(myvid, 0, 0, mycanvas.width, mycanvas.height);
+	}
+	function grabframe2() {
+		var myvid2 = document.getElementById('myvid2');     
+        var mycanvas2 = document.getElementById('mycanvas2');
+		var ctx2 = mycanvas2.getContext('2d'); 
+		ctx2.fillStyle = "#6F4FF0";
+		ctx2.fillRect(0, 0, mycanvas2.width, mycanvas.height);
+		ctx2.drawImage(myvid2, 0, 0, mycanvas2.width, mycanvas2.height);
+	}
+</script>
+</head><body>
+<p>This is a test page to verify Canvas.DrawImage(Video,.) works on iPhone
+<p>Capture two short videos below, using the front camera for one and the back camera for the other.  Keep the phone oriented in portrait mode (vertical) for both captures.
+<p>
+<br>
+Video1:<input type="file" id="uploadvid" accept="video/mp4" onchange="fileSelected(event)" capture>
+Video2:<input type="file" id="uploadvid2" accept="video/mp4" onchange="fileSelected2(event)" capture>
+<video id="myvid" width="360px" height="480px"  controls  playsinline  type="video/mp4"  preload="auto" muted="true" src=""></video>
+<video id="myvid2" width="360px" height="480px"  controls  playsinline  type="video/mp4"  preload="auto" muted="true" src=""></video>
+<p> While playing each video, attempt to capture a frame to the canvases below using these buttons:
+<br><button style="height: 50px;" onclick="grabframe();">Grab Frame From Video 1</button><button style="height: 50px;right: 10px;" onclick="grabframe2();">Grab Frame From Video2</button>
+<br><br>
+<br>CANVAS:<br>
+<canvas id="mycanvas" width="360px" height="480px" style="border:2px solid red;"></canvas>
+<canvas id="mycanvas2" width="360px" height="480px" style="left: 400px; border:2px solid black;"></canvas>
+
+				
+</body></html>
